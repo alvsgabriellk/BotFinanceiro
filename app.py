@@ -8,7 +8,7 @@ app = Flask(__name__)
 def whatsapp():
     msg = request.args.get("msg") # args = parâmetro ; get = pega valor pelo nome
     if not msg:
-        return "Nenhuma mensagem enviada", 400 # dado errado ou faltando
+        return "Nenhuma mensagem enviada" 
     resposta = interpretar_mensagem(msg)
 
     return resposta
