@@ -1,4 +1,4 @@
-import re
+import re # encontra padrões / extrai dados / valida formatos
 
 def interpretar_mensagem(text):
     text = text.lower()
@@ -6,15 +6,21 @@ def interpretar_mensagem(text):
     comandosGastos = [
         "gastei",
         "comprei",
-        "fiz uma compra",
         "paguei",
         "parcelei",
         "comprar",
-        "pagar"
-    ]
+        "pagar",
 
+        "eu paguei",
+        "eu comprei",
+        "eu fiz uma compra",
+        "fiz uma compra",
+        "eu gastei",
+        "eu parcelei"
+    ]
+       #retorn true se apns um for tru        # percorre a lista toda
     if any(text.startswith(comando) for comando in comandosGastos):
-        
+        #text.starswith - verifica se começa com o comando
 
 
         #valorEncontrado = re.search(r"\d+", text) procura qualquer sequencia de números"""
@@ -25,7 +31,7 @@ def interpretar_mensagem(text):
             #return f"Entendi!, Você registrou um gasto de R${valor:.2f}
 
         if text.startswith("parcelei"):
-            numeros = re.findall(r"\d+", text)
+            numeros = re.findall(r"\d+", text) # encontre todas sequencias de numeros no texto / + um ou mais
 
             if len(numeros) >= 2:
                 parcelas = min(numeros, key=int)
