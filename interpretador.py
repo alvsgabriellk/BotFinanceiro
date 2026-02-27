@@ -87,5 +87,21 @@ def interpretar_mensagem(text):
                 f"Categoria: {categoria}"
             )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
+    
+    if text.strip() == "listar gastos":
+        if not gastos:
+            return "Nenhum gasto registrado ainda."
+        
+        resposta = "📋 Seus gastos: \n"
+
+        total = 0
+
+        for i, gasto in enumerate(gastos, start=1):
+            resposta += f"{i}. R${gasto['valor']} - {gasto['categoria']}\n"
+            total += gasto["valor"]
+
+        resposta += f"\n💰 Total: R${total}"
+
+        return resposta
 
     return f"Você enviou: {text}"
