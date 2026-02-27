@@ -1,5 +1,26 @@
 import re # encontra padrões / extrai dados / valida formatos
 
+gastos = []
+
+categorias = {
+    "Alimentação": ["mercado", "restaurante", "lanche", "ifood", "salgado", "besteira", "bebida", "água", "comida"],
+    "Transporte": ["uber", "ônibus"],
+    "Pessoal": ["roupa", "acessório", "cabeleleiro", "cabelo", "academia"],
+    "Presente": ["presente"],
+    "Lazer": ["cinema", "passear", "jogo", "passeio", "crunchyroll", "evento", "corrida de rua", "praia"],
+    "Financeiro": ["cartão de crédito", "empréstimo"],
+    "Educação": ["curso", "livro", "faculdade"],
+    "Saúde": ["farmácia", "remédio"],
+    "Tecnologia": ["celular", "notebook", "hospedagem", "software", "equipamento"]
+}
+
+def detectar_categoria(text):
+    for categoria, palavras in categorias.items():
+        for palavra in palavras:
+            if palavra in text:
+                return categoria
+    return "Outros"
+
 def interpretar_mensagem(text):
     text = text.lower()
 
@@ -40,7 +61,7 @@ def interpretar_mensagem(text):
                 total = int(parcelas) * int(valorParcela)
 
                 return (
-                    f"Compra parcelada detectada!\n"
+                    f"Compra parcelada detectada!✅\n"
                     f"{parcelas}x de R${valorParcela}\n"
                     f"Total: R${total}"
                 )
@@ -50,8 +71,21 @@ def interpretar_mensagem(text):
 
         if numeros:
             valor = max(numeros, key=int)
-            return f"Entendi!, você registrou um gasto de R${valor}"
-        
+
+            categoria = detectar_categoria(text)
+
+            gasto = {
+                "valor": int(valor),
+                "categoria": categoria
+            }
+
+            gastos.append(gasto)
+
+            return (
+                f"Gasto registrado com sucesso! ✅\n"
+                f"Valor: R${valor}\n"
+                f"Categoria: {categoria}"
+            )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
 
     return f"Você enviou: {text}"
