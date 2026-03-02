@@ -8,6 +8,9 @@ CAMINHO_ARQUIVO = "data/gastos.json"
 def carregar_gastos():
     if not os.path.exists(CAMINHO_ARQUIVO):
         return []
+
+    if os.path.getsize(CAMINHO_ARQUIVO) == 0:
+        return []
     
     with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -31,7 +34,7 @@ def salvar_gastos(gastos):
 
 
 
-gastos = []
+gastos = carregar_gastos()
 
 categorias = {
     "Alimentação": ["mercado", "restaurante", "lanche", "ifood", "salgado", "besteira", "bebida", "água", "comida"],
@@ -110,7 +113,9 @@ def interpretar_mensagem(text):
                 "categoria": categoria
             }
 
+            
             gastos.append(gasto)
+            salvar_gastos(gastos)
 
             return (
                 f"Gasto registrado com sucesso! ✅\n"
