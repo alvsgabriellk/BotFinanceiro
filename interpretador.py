@@ -11,10 +11,14 @@ def carregar_gastos():
     
     with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+    
     
 
-
-
+def salvar_gastos(gastos):
+    with open(CAMINHO_ARQUIVO, "w", encoding="utf-8") as f:
+        json.dump(gastos, f, indent=4, ensure_ascii=False)
 
 
 
