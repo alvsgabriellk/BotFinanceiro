@@ -1,4 +1,31 @@
 import re # encontra padrões / extrai dados / valida formatos
+import os
+import json
+
+CAMINHO_ARQUIVO = "data/gastos.json"
+
+
+def carregar_gastos():
+    if not os.path.exists(CAMINHO_ARQUIVO):
+        return []
+    
+    with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
+        return json.load(f)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 gastos = []
 
