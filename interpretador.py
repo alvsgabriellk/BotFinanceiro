@@ -86,7 +86,7 @@ def interpretar_mensagem(text):
             #return f"Entendi!, Você registrou um gasto de R${valor:.2f}
 
         if text.startswith("parcelei"):
-            numeros = re.findall(r"\d+", text) # encontre todas sequencias de numeros no texto / + um ou mais
+            numeros = re.findall(r"\d+[.,]?\d*", text) # encontre todas sequencias de numeros no texto / + um ou mais
 
             if len(numeros) >= 2:
                 parcelas = min(numeros, key=int)
@@ -104,7 +104,9 @@ def interpretar_mensagem(text):
         numeros = re.findall(r"\d+", text)
 
         if numeros:
-            valor = max(numeros, key=int)
+            #valor = max(numeros, key=int)
+            valores = [float(n.replace(",", ".")) for n in numeros]
+            valor = max(valores)
 
             categoria = detectar_categoria(text)
 
