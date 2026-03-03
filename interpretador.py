@@ -74,6 +74,8 @@ def interpretar_mensagem(text):
         "eu gastei",
         "eu parcelei",
         "eu fiz um emprestimo",
+        "eu fiz um empréstimo",
+        "fiz um emprestimo",
         "eu fiz um empréstimo"
     ]
        #retorn true se apns um for tru        # percorre a lista toda
@@ -161,11 +163,30 @@ def interpretar_mensagem(text):
         total = 0
 
         for i, gasto in enumerate(gastos, start=1):
-            resposta += f"{i}. R${gasto['valor']} - {gasto['categoria']}\n"
+            resposta += f"{i}. R${gasto['valor']:.2f} - {gasto['categoria']}\n"
             total += gasto["valor"]
 
         resposta += f"\n💰 Total: R${total}"
 
         return resposta
+    
+    if text.startswith("remover"):
+        numeros = re.findall(r"\d+", text)
+
+        if not numeros:
+            return "Informe o número do gasto que deseja remover."
+        
+        indice = int(numeros[0]) - 1
+
+        if 0 <= indice < len(gastos):
+            removido = gastos.pop(indice)
+            salvar_gastos(gastos)
+
+            return (
+                f"Gasto removido! 🗑\n"
+                f"Valor: R${removido['valor']:.2f}\n"
+                f"Categoria: {removido['categoria']}"
+            )
+        return "Número inválido."
 
     return f"Você enviou: {text}"
