@@ -65,13 +65,16 @@ def interpretar_mensagem(text):
         "parcelei",
         "comprar",
         "pagar",
+        "emprestimo",
 
         "eu paguei",
         "eu comprei",
         "eu fiz uma compra",
         "fiz uma compra",
         "eu gastei",
-        "eu parcelei"
+        "eu parcelei",
+        "eu fiz um emprestimo",
+        "eu fiz um empréstimo"
     ]
        #retorn true se apns um for tru        # percorre a lista toda
     if any(text.startswith(comando) for comando in comandosGastos):
@@ -85,23 +88,32 @@ def interpretar_mensagem(text):
             #valor = valorEncontrado.group()
             #return f"Entendi!, Você registrou um gasto de R${valor:.2f}
 
-        if text.startswith("parcelei"):
+        if "parcelei" in text or "emprestimo" in text or "empréstimo" in text:
             numeros = re.findall(r"\d+[.,]?\d*", text) # encontre todas sequencias de numeros no texto / + um ou mais
 
             if len(numeros) >= 2:
-                parcelas = min(numeros, key=int)
-                valorParcela = max(numeros, key=int)
 
-                total = int(parcelas) * int(valorParcela)
+                valores = [float(n.replace(",", ".")) for n in numeros]
 
-                return (
-                    f"Compra parcelada detectada!✅\n"
-                    f"{parcelas}x de R${valorParcela}\n"
-                    f"Total: R${total}"
-                )
-            return "Entendi que é parcelado, mas não identifiquei parcelas e valor corretamente"
+                parcelas = int(min(valores))
+                valorParcela = max(valores)
+                categoria = detectar_categoria(text)
+
+                total = (parcelas) * (valorParcela)
+
+                gasto = {
+                    "valor": total,
+                    "categoria": categoria,
+                    "parcelas": parcelas
+                }
+
+                gastos.append(gasto)
+                salvar_gastos(gastos)
+
+                
+            return "Entendi que é parcelado/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
-        numeros = re.findall(r"\d+", text)
+        numeros = re.findall(r"\d+[.,]?\d*", text)
 
         if numeros:
             #valor = max(numeros, key=int)
@@ -111,7 +123,7 @@ def interpretar_mensagem(text):
             categoria = detectar_categoria(text)
 
             gasto = {
-                "valor": int(valor),
+                "valor": valor,
                 "categoria": categoria
             }
 
@@ -121,7 +133,7 @@ def interpretar_mensagem(text):
 
             return (
                 f"Gasto registrado com sucesso! ✅\n"
-                f"Valor: R${valor}\n"
+                f"Valor: R${valor:.2f}\n"
                 f"Categoria: {categoria}"
             )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
