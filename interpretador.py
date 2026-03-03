@@ -30,10 +30,6 @@ def salvar_gastos(gastos):
 
 
 
-
-
-
-
 gastos = carregar_gastos()
 
 categorias = {
@@ -83,12 +79,8 @@ def interpretar_mensagem(text):
         #text.starswith - verifica se começa com o comando
 
 
-        #valorEncontrado = re.search(r"\d+", text) procura qualquer sequencia de números"""
+        #re.search(r"\d+", text) procura qualquer sequencia de números"""
 
-
-        #if valorEncontrado:
-            #valor = valorEncontrado.group()
-            #return f"Entendi!, Você registrou um gasto de R${valor:.2f}
 
         if "parcelei" in text or "emprestimo" in text or "empréstimo" in text:
             numeros = re.findall(r"\d+[.,]?\d*", text) # encontre todas sequencias de numeros no texto / + um ou mais
@@ -127,12 +119,11 @@ def interpretar_mensagem(text):
                         f"Total: R${total:.2f}\n"
                         f"Categoria: {categoria}"
                     )
-            return "Entendi que é parcelado/emprestimo, mas não identifiquei parcelas e valor corretamente"
+            return "Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
         numeros = re.findall(r"\d+[.,]?\d*", text)
 
         if numeros:
-            #valor = max(numeros, key=int)
             valores = [float(n.replace(",", ".")) for n in numeros]
             valor = max(valores)
 
