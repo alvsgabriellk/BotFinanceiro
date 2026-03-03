@@ -110,7 +110,21 @@ def interpretar_mensagem(text):
                 gastos.append(gasto)
                 salvar_gastos(gastos)
 
+                if "parcelei" in text:
+                    return (
+                        f"Compra parcelada registrada!✅\n"
+                        f"{parcelas}x de R${valorParcela:.2f}\n"
+                        f"Total: R${total:.2f}\n"
+                        f"Categoria: {categoria}"
+                    )
                 
+                if "emprestimo" in text or "empréstimo" in text:
+                    return (
+                        f"Empréstimo registrado!✅\n"
+                        f"{parcelas}x de R${valorParcela:.2f}\n"
+                        f"Total: R${total:.2f}\n"
+                        f"Categoria: {categoria}"
+                    )
             return "Entendi que é parcelado/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
         numeros = re.findall(r"\d+[.,]?\d*", text)
