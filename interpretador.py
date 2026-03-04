@@ -255,7 +255,7 @@ def interpretar_mensagem(text):
             nomeMesExibicao = nomeMesDigitado.upper()
         
         # filtrar mes escolhido
-        
+
         gastosFiltrados = [
             g for g in gastos
             if g["mes"] == mes and g["ano"] == ano
@@ -264,15 +264,13 @@ def interpretar_mensagem(text):
         if not gastosFiltrados:
             return "Nenhum gasto registrado nesse mês."
 
-            
-
 
 
         totalGeral = 0
         totalCategoria = {}
         totalPagamento = {}
 
-        for gasto in gastos:
+        for gasto in gastosFiltrados:
             valor = gasto["valor"]
             categoria = gasto["categoria"]
             pagamento = gasto["forma_pagamento"]
@@ -282,7 +280,7 @@ def interpretar_mensagem(text):
             totalCategoria[categoria] = totalCategoria.get(categoria, 0) + valor
             totalPagamento[pagamento] = totalPagamento.get(pagamento, 0) + valor
 
-        resposta = "📊 RESUMO FINANCEIRO\n\n"
+        resposta = f"📊 RESUMO {nomeMesExibicao}\n\n"
 
         resposta += "💰 Total Geral: R${:.2f}\n\n".format(totalGeral)
 
