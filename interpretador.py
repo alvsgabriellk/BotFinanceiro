@@ -15,14 +15,33 @@ def carregar_gastos():
     
     with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
         return json.load(f)
-
-
     
     
 
 def salvar_gastos(gastos):
     with open(CAMINHO_ARQUIVO, "w", encoding="utf-8") as f:
         json.dump(gastos, f, indent=4, ensure_ascii=False)
+
+
+
+meses = {
+    "janeiro": "01",
+    "fevereiro": "02",
+    "março": "03",
+    "abril": "04",
+    "maio": "05",
+    "junho": "06",
+    "julho": "07",
+    "agosto": "08",
+    "setembro": "09",
+    "outubro": "10",
+    "novembro": "11",
+    "dezembro": "12"
+}        
+
+agora = datetime.now()
+mes_atual = agora.strftime("%m")
+ano_atual = agora.strftime("%Y")
 
 
 formaDePagamento = ["pix", "credito", "crédito", "debito", "dinheiro"]
@@ -108,14 +127,17 @@ def interpretar_mensagem(text):
                 total = (parcelas) * (valorParcela)
 
                 formaDePagamento = detectar_pagamento(text)
-                data_atual = datetime.now().strftime("%Y-%m-%d %H:%M")
+                dataAtual = datetime.now().strftime("%Y-%m-%d %H:%M")
+                dataAgora = datetime.now().strftime("%m-%d %H:%M")
 
                 gasto = {
                     "valor": total,
                     "categoria": categoria,
                     "parcelas": parcelas,
-                    "data": data_atual,
-                    "forma_pagamento": formaDePagamento
+                    "data": dataAtual,
+                    "forma_pagamento": formaDePagamento,
+                    "mes": mes_atual,
+                    "ano": ano_atual
                 }
 
                 gastos.append(gasto)
@@ -127,7 +149,7 @@ def interpretar_mensagem(text):
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
                         f"Categoria: {categoria}\n"
-                        f"Data: {data_atual}\n"
+                        f"Data: {dataAgora}\n"
                         f"Forma de Pagamento: {formaDePagamento}"
                     )
                 
@@ -137,7 +159,7 @@ def interpretar_mensagem(text):
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
                         f"Categoria: {categoria}\n"
-                        f"Data: {data_atual}\n"
+                        f"Data: {dataAgora}\n"
                         f"Forma de Pagamento: {formaDePagamento}"
                     )
             return "Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
@@ -150,14 +172,17 @@ def interpretar_mensagem(text):
 
             categoria = detectar_categoria(text)
             formaDePagamento = detectar_pagamento(text)
-            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M")
+            dataAtual = datetime.now().strftime("%Y-%m-%d %H:%M")
+            dataAgora = datetime.now().strftime("%m-%d %H:%M")
             
 
             gasto = {
                 "valor": valor,
                 "categoria": categoria,
-                "data": data_atual,
-                "forma_pagamento": formaDePagamento
+                "data": dataAtual,
+                "forma_pagamento": formaDePagamento,
+                "mes": mes_atual,
+                "ano": ano_atual
             }
 
             
@@ -168,7 +193,7 @@ def interpretar_mensagem(text):
                 f"Gasto registrado com sucesso! ✅\n"
                 f"Valor: R${valor:.2f}\n"
                 f"Categoria: {categoria}\n"
-                f"Data: {data_atual}\n"
+                f"Data: {dataAgora}\n"
                 f"Forma de pagamento: {formaDePagamento}"
             )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
@@ -185,7 +210,7 @@ def interpretar_mensagem(text):
             resposta += f"{i}. R${gasto['valor']:.2f} - {gasto['categoria']}\n"
             total += gasto["valor"]
 
-        resposta += f"\n💰 Total: R${total}"
+        resposta += f"\n💰 Total: R${total:.2f}"
 
         return resposta
     
