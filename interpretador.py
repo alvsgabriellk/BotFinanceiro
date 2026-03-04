@@ -1,7 +1,7 @@
 import re # encontra padrões / extrai dados / valida formatos
 import os
 import json
-
+from datetime import datetime
 
 CAMINHO_ARQUIVO = "data/gastos.json"
 
@@ -99,10 +99,15 @@ def interpretar_mensagem(text):
 
                 total = (parcelas) * (valorParcela)
 
+                formaDePagamento = detectar_pagamento(text)
+                data_atual = datetime.now().strftime("%Y-%m-%d %H:%M")
+
                 gasto = {
                     "valor": total,
                     "categoria": categoria,
-                    "parcelas": parcelas
+                    "parcelas": parcelas,
+                    "data": data_atual,
+                    "forma_pagamento": formaDePagamento
                 }
 
                 gastos.append(gasto)
@@ -114,6 +119,8 @@ def interpretar_mensagem(text):
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
                         f"Categoria: {categoria}"
+                        f"Data: {data_atual}"
+                        f"Forma de Pagamento: {formaDePagamento}"
                     )
                 
                 if "emprestimo" in text or "empréstimo" in text:
@@ -122,6 +129,8 @@ def interpretar_mensagem(text):
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
                         f"Categoria: {categoria}"
+                        f"Data: {data_atual}"
+                        f"Forma de Pagamento: {formaDePagamento}"
                     )
             return "Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
@@ -132,10 +141,15 @@ def interpretar_mensagem(text):
             valor = max(valores)
 
             categoria = detectar_categoria(text)
+            formaDePagamento = detectar_pagamento(text)
+            data_atual = datetime.now().strftime("%Y-%m-%d %H:%M")
+            
 
             gasto = {
                 "valor": valor,
-                "categoria": categoria
+                "categoria": categoria,
+                "data": data_atual,
+                "forma_pagamento": formaDePagamento
             }
 
             
@@ -146,6 +160,8 @@ def interpretar_mensagem(text):
                 f"Gasto registrado com sucesso! ✅\n"
                 f"Valor: R${valor:.2f}\n"
                 f"Categoria: {categoria}"
+                f"Data: {data_atual}"
+                f"Forma de pagamento: {formaDePagamento}"
             )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
     
