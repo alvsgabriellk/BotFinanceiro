@@ -237,12 +237,13 @@ def interpretar_mensagem(text):
     if text.startswith("resumo"):
         
         partes = text.split()
+        detalhado = "detalhado" in partes
 
         # definir mes e ano
         if len(partes) == 1:
             agora = datetime.now()
             mes = agora.strftime("%m")
-            ano = agora.strftime("Y")
+            ano = agora.strftime("%Y")
             nomeMesExibicao = agora.strftime("%B").upper()
         else:
             nomeMesDigitado = partes[1]
@@ -280,17 +281,41 @@ def interpretar_mensagem(text):
             totalCategoria[categoria] = totalCategoria.get(categoria, 0) + valor
             totalPagamento[pagamento] = totalPagamento.get(pagamento, 0) + valor
 
-        resposta = f"📊 RESUMO {nomeMesExibicao}\n\n"
+        resposta = f"📊 RESUMO {nomeMesExibicao}"
+
+        if detalhado:
+            resposta += " (DETALHADO)"
+        resposta += "\n\n"
+
+        categorias = {}
+
+        for gasto in gastosFiltrados:
+            categorias.setdefault(gasto["categoria"], []).append(gasto)
+
+        for categoria, listaGastos in categorias.items():
+            totalCategoria = sum(g["valor"] for g in listaGastos)
+            
+
+            resposta += f"📂 {categoria}\n"
+
+            if detalhado:
+                for g in listaGastos:
+                    resposta += f"{g["data"]} | {g["forma_pagamento"]} | R${g["valor"]:.2f}\n"
+            resposta += f"Total {categoria}: R${totalCategoria:.2f}\n\n"
+
+        if not detalhado:
+            resposta += "💳 Por Forma de Pagamento:\n"
+
+            totalPagamento = {}
+            for g in gastosFiltrados:
+                totalPagamento[g["forma_pagamento"]] = totalPagamento.get(g["forma_pagamento"], 0) + g["valor"]
+
+            for pag, total in totalPagamento.items():
+                resposta += f"- {pag}: R${total:.2f}\n"
+
+            resposta += "\n"
 
         resposta += "💰 Total Geral: R${:.2f}\n\n".format(totalGeral)
-
-        resposta += "📂 Por Categoria:\n"
-        for cat, total in totalCategoria.items():
-            resposta += f"- {cat}: R${total:.2f}\n"
-
-        resposta += "\n💳 Por Forma de Pagamento:\n"
-        for pag, total in totalPagamento.items():
-            resposta += f"- {pag}: R${total:.2f}\n"
 
         return resposta
 
