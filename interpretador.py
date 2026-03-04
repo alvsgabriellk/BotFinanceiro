@@ -235,9 +235,6 @@ def interpretar_mensagem(text):
     
 
     if text.startswith("resumo"):
-
-        if not gastos:
-            return "Nenhum gasto registrado."
         
         partes = text.split()
 
@@ -256,6 +253,16 @@ def interpretar_mensagem(text):
             mes = meses[nomeMesDigitado]
             ano = datetime.now().strftime("%Y")
             nomeMesExibicao = nomeMesDigitado.upper()
+        
+        # filtrar mes escolhido
+        
+        gastosFiltrados = [
+            g for g in gastos
+            if g["mes"] == mes and g["ano"] == ano
+        ]
+
+        if not gastosFiltrados:
+            return "Nenhum gasto registrado nesse mês."
 
             
 
