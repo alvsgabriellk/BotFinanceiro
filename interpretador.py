@@ -2,6 +2,7 @@ import re # encontra padrões / extrai dados / valida formatos
 import os
 import json
 
+
 CAMINHO_ARQUIVO = "data/gastos.json"
 
 
@@ -24,10 +25,13 @@ def salvar_gastos(gastos):
         json.dump(gastos, f, indent=4, ensure_ascii=False)
 
 
+formaDePagamento = ["pix", "credito", "crédito", "debito", "dinheiro"]
 
-
-
-
+def detectar_pagamento(text):
+    for pagamento in formaDePagamento:
+        if pagamento in text:
+            return pagamento.capitalize()
+    return "Não Informado"
 
 
 gastos = carregar_gastos()
