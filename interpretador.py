@@ -28,6 +28,14 @@ def salvar_gastos(gastos):
 formaDePagamento = ["pix", "credito", "crédito", "debito", "dinheiro"]
 
 def detectar_pagamento(text):
+    text = text.lower()
+
+    if "parcelei" in text:
+        return "Credito"
+    
+    if "emprestimo" in text or "empréstimo" in text:
+        return "Empréstimo"
+
     for pagamento in formaDePagamento:
         if pagamento in text:
             return pagamento.capitalize()
