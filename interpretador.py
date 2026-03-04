@@ -118,8 +118,8 @@ def interpretar_mensagem(text):
                         f"Compra parcelada registrada!✅\n"
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
-                        f"Categoria: {categoria}"
-                        f"Data: {data_atual}"
+                        f"Categoria: {categoria}\n"
+                        f"Data: {data_atual}\n"
                         f"Forma de Pagamento: {formaDePagamento}"
                     )
                 
@@ -128,8 +128,8 @@ def interpretar_mensagem(text):
                         f"Empréstimo registrado!✅\n"
                         f"{parcelas}x de R${valorParcela:.2f}\n"
                         f"Total: R${total:.2f}\n"
-                        f"Categoria: {categoria}"
-                        f"Data: {data_atual}"
+                        f"Categoria: {categoria}\n"
+                        f"Data: {data_atual}\n"
                         f"Forma de Pagamento: {formaDePagamento}"
                     )
             return "Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
@@ -159,8 +159,8 @@ def interpretar_mensagem(text):
             return (
                 f"Gasto registrado com sucesso! ✅\n"
                 f"Valor: R${valor:.2f}\n"
-                f"Categoria: {categoria}"
-                f"Data: {data_atual}"
+                f"Categoria: {categoria}\n"
+                f"Data: {data_atual}\n"
                 f"Forma de pagamento: {formaDePagamento}"
             )
         return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
@@ -199,5 +199,39 @@ def interpretar_mensagem(text):
                 f"Categoria: {removido['categoria']}"
             )
         return "Número inválido."
+    
+
+    if text == "resumo":
+
+        if not gastos:
+            return "Nenhum gasto registrado."
+        
+        totalGeral = 0
+        totalCategoria = {}
+        totalPagamento = {}
+
+        for gasto in gastos:
+            valor = gasto["valor"]
+            categoria = gasto["categoria"]
+            pagamento = gasto["forma_pagamento"]
+
+            totalGeral += valor
+
+            totalCategoria[categoria] = totalCategoria.get(categoria, 0) + valor
+            totalPagamento[pagamento] = totalPagamento.get(pagamento, 0) + valor
+
+        resposta = "📊 RESUMO FINANCEIRO\n\n"
+
+        resposta += "💰 Total Geral: R${:.2f}\n\n".format(totalGeral)
+
+        resposta += "📂 Por Categoria:\n"
+        for cat, total in totalCategoria.items():
+            resposta += f"- {cat}: R${total:.2f}\n"
+
+        resposta += "\n💳 Por Forma de Pagamento:\n"
+        for pag, total in totalPagamento.items():
+            resposta += f"- {pag}: R${total:.2f}\n"
+
+        return resposta
 
     return f"Você enviou: {text}"
