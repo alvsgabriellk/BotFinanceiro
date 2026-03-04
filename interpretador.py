@@ -234,11 +234,33 @@ def interpretar_mensagem(text):
         return "Número inválido."
     
 
-    if text == "resumo":
+    if text.startswith("resumo"):
 
         if not gastos:
             return "Nenhum gasto registrado."
         
+        partes = text.split()
+
+        # definir mes e ano
+        if len(partes) == 1:
+            agora = datetime.now()
+            mes = agora.strftime("%m")
+            ano = agora.strftime("Y")
+            nomeMesExibicao = agora.strftime("%B").upper()
+        else:
+            nomeMesDigitado = partes[1]
+
+            if nomeMesDigitado not in meses:
+                return "Mês inválido."
+            
+            mes = meses[nomeMesDigitado]
+            ano = datetime.now().strftime("%Y")
+            nomeMesExibicao = nomeMesDigitado.upper()
+
+            
+
+
+
         totalGeral = 0
         totalCategoria = {}
         totalPagamento = {}
