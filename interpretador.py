@@ -39,9 +39,7 @@ meses = {
     "dezembro": "12"
 }        
 
-agora = datetime.now()
-mes_atual = agora.strftime("%m")
-ano_atual = agora.strftime("%Y")
+
 
 
 formaDePagamento = ["pix", "credito", "crédito", "debito", "dinheiro"]
@@ -64,16 +62,15 @@ def detectar_pagamento(text):
 gastos = carregar_gastos()
 
 categorias = {
-    "Contas": ["energia", "banco", "cartão de crédito", "cartao de credito", "emprestimo", "empréstimo"],
-    "Alimentação": ["mercado", "restaurante", "lanche", "ifood", "salgado", "besteira", "bebida", "água", "comida"],
-    "Transporte": ["uber", "ônibus"],
-    "Pessoal": ["roupa", "acessório", "cabeleleiro", "cabelo", "academia"],
+    "Contas": ["energia", "banco", "cartão de crédito", "cartao de credito", "emprestimo", "empréstimo", "faculdade"],
+    "Alimentação": ["mercado", "restaurante", "lanche", "ifood", "besteira", "bebida", "comida"],
+    "Transporte": ["uber", "ônibus", "onibus"],
+    "Pessoal": ["roupa", "acessório","acessorio", "cabeleleiro", "cabelo", "academia"],
     "Presente": ["presente"],
-    "Lazer": ["cinema", "passear", "jogo", "passeio", "crunchyroll", "evento", "corrida de rua", "praia"],
-    "Financeiro": ["cartão de crédito", "empréstimo"],
-    "Educação": ["curso", "livro", "faculdade"],
-    "Saúde": ["farmácia", "remédio"],
-    "Tecnologia": ["celular", "notebook", "hospedagem", "software", "equipamento"]
+    "Lazer": ["sair", "cinema", "passear", "jogo", "passeio", "crunchyroll", "evento", "corrida de rua", "praia"],
+    "Educação": ["curso", "livro"],
+    "Saúde": ["farmácia", "remédio", "remedio", "farmacia"],
+    "Tecnologia": ["celular", "notebook", "hospedagem", "equipamento"]
 }
 
 def detectar_categoria(text):
@@ -128,8 +125,9 @@ def interpretar_mensagem(text):
                 total = (parcelas) * (valorParcela)
 
                 formaDePagamento = detectar_pagamento(text)
-                dataAtual = datetime.now().strftime("%Y-%m-%d %H:%M")
-                dataAgora = datetime.now().strftime("%m-%d %H:%M")
+                dataAtual = datetime.now().strftime("%Y/%m/%d %H:%M")
+                dataAgora = datetime.now().strftime("%m/%d %H:%M")
+                agora = datetime.now()
 
                 gasto = {
                     "valor": total,
@@ -137,8 +135,8 @@ def interpretar_mensagem(text):
                     "parcelas": parcelas,
                     "data": dataAtual,
                     "forma_pagamento": formaDePagamento,
-                    "mes": mes_atual,
-                    "ano": ano_atual
+                    "mes": agora.strftime("%m"),
+                    "ano": agora.strftime("%Y")
                 }
 
                 gastos.append(gasto)
@@ -149,9 +147,9 @@ def interpretar_mensagem(text):
                         f"✅Compra parcelada registrada!\n"
                         f"📝Categoria: {categoria}\n"
                         f"💳{parcelas}x de R${valorParcela:.2f}\n"
-                        f"💰Forma de Pagamento: {formaDePagamento}"
-                        f"💸R${total:.2f}\n"
-                        f"📅Data: {dataAgora}\n"
+                        f"💰Forma de Pagamento: {formaDePagamento}\n"
+                        f"💸*R${total:.2f}*\n"
+                        f"📅{dataAgora}"
                     )
                 
                 if "emprestimo" in text or "empréstimo" in text:
@@ -159,9 +157,9 @@ def interpretar_mensagem(text):
                         f"✅Compra com Empréstimo registrado!\n"
                         f"📝Categoria: {categoria}\n"
                         f"💳{parcelas}x de R${valorParcela:.2f}\n"
-                        f"💰Forma de Pagamento: {formaDePagamento}"
-                        f"💸R${total:.2f}\n"
-                        f"📅Data: {dataAgora}\n"
+                        f"💰Forma de Pagamento: {formaDePagamento}\n"
+                        f"💸*R${total:.2f}*\n"
+                        f"📅{dataAgora}"
                     )
             return "❗Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
@@ -173,8 +171,9 @@ def interpretar_mensagem(text):
 
             categoria = detectar_categoria(text)
             formaDePagamento = detectar_pagamento(text)
-            dataAtual = datetime.now().strftime("%Y-%m-%d %H:%M")
-            dataAgora = datetime.now().strftime("%m-%d %H:%M")
+            dataAtual = datetime.now().strftime("%Y/%m/%d %H:%M")
+            dataAgora = datetime.now().strftime("%m/%d %H:%M")
+            agora = datetime.now()
             
 
             gasto = {
@@ -182,8 +181,8 @@ def interpretar_mensagem(text):
                 "categoria": categoria,
                 "data": dataAtual,
                 "forma_pagamento": formaDePagamento,
-                "mes": mes_atual,
-                "ano": ano_atual
+                "mes": agora.strftime("%m"),
+                "ano": agora.strftime("%Y")
             }
 
             
@@ -193,27 +192,11 @@ def interpretar_mensagem(text):
             return (
                 f"✅Gasto registrado com sucesso!\n"
                 f"📝Categoria: {categoria}\n"
-                f"💰Forma de pagamento: {formaDePagamento}"
-                f"💸R${valor:.2f}\n"
-                f"📅Data: {dataAgora}\n"
+                f"💰Forma de pagamento: {formaDePagamento}\n"
+                f"💸*R${valor:.2f}*\n"
+                f"📅{dataAgora}"
             )
         return "❗Você registrou um gasto, mas não identifiquei o valor."
-    
-    if text.strip() == "listar gastos":
-        if not gastos:
-            return "✅Nenhum gasto registrado ainda."
-        
-        resposta = "📋 Seus gastos: \n"
-
-        total = 0
-
-        for i, gasto in enumerate(gastos, start=1):
-            resposta += f"{i}. R${gasto['valor']:.2f} - {gasto['categoria']}\n"
-            total += gasto["valor"]
-
-        resposta += f"\n💰 Total: R${total:.2f}"
-
-        return resposta
     
     if text.startswith("remover"):
         numeros = re.findall(r"\d+", text)
@@ -229,7 +212,7 @@ def interpretar_mensagem(text):
 
             return (
                 f"Gasto removido! 🗑\n"
-                f"Valor: R${removido['valor']:.2f}\n"
+                f"Valor: *R${removido['valor']:.2f}*\n"
                 f"Categoria: {removido['categoria']}"
             )
         return "❌Número inválido."
@@ -245,7 +228,8 @@ def interpretar_mensagem(text):
             agora = datetime.now()
             mes = agora.strftime("%m")
             ano = agora.strftime("%Y")
-            nomeMesExibicao = agora.strftime("%B").upper()
+            mesesNumeroParaNome = {v: k for k, v in meses.items()} # dict invertid
+            nomeMesExibicao = mesesNumeroParaNome[mes].upper()
         else:
             nomeMesDigitado = partes[1]
 
@@ -254,7 +238,8 @@ def interpretar_mensagem(text):
             
             mes = meses[nomeMesDigitado]
             ano = datetime.now().strftime("%Y")
-            nomeMesExibicao = nomeMesDigitado.upper()
+            mesesNumeroParaNome = {v: k for k, v in meses.items()}
+            nomeMesExibicao = mesesNumeroParaNome[mes].upper()
         
         # filtrar mes escolhido
 
@@ -301,8 +286,8 @@ def interpretar_mensagem(text):
 
             if detalhado:
                 for g in listaGastos:
-                    resposta += f"{g["data"]} | {g["forma_pagamento"]} | R${g["valor"]:.2f}\n"
-            resposta += f"Total {categoria}: R${totalCategoria:.2f}\n\n"
+                    resposta += f"{g["data"]} | {g["forma_pagamento"]} | *R${g["valor"]:.2f}*\n"
+            resposta += f"Total {categoria}: *R${totalCategoria:.2f}*\n\n"
 
         if not detalhado:
             resposta += "💰 Por Forma de Pagamento:\n"
@@ -312,12 +297,12 @@ def interpretar_mensagem(text):
                 totalPagamento[g["forma_pagamento"]] = totalPagamento.get(g["forma_pagamento"], 0) + g["valor"]
 
             for pag, total in totalPagamento.items():
-                resposta += f"- {pag}: R${total:.2f}\n"
+                resposta += f"- {pag}: *R${total:.2f}*\n"
 
             resposta += "\n"
 
-        resposta += "💵 Total Geral: R${:.2f}\n\n".format(totalGeral)
+        resposta += "💵 Total Geral: *R${:.2f}*\n\n".format(totalGeral)
 
         return resposta
 
-    return f"Você enviou: {text}"
+    return "❓Não entendi o que você enviou."
