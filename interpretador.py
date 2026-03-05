@@ -64,6 +64,7 @@ def detectar_pagamento(text):
 gastos = carregar_gastos()
 
 categorias = {
+    "Contas": ["energia", "banco", "cartão de crédito", "cartao de credito", "emprestimo", "empréstimo"],
     "Alimentação": ["mercado", "restaurante", "lanche", "ifood", "salgado", "besteira", "bebida", "água", "comida"],
     "Transporte": ["uber", "ônibus"],
     "Pessoal": ["roupa", "acessório", "cabeleleiro", "cabelo", "academia"],
@@ -145,24 +146,24 @@ def interpretar_mensagem(text):
 
                 if "parcelei" in text:
                     return (
-                        f"Compra parcelada registrada!✅\n"
-                        f"{parcelas}x de R${valorParcela:.2f}\n"
-                        f"Total: R${total:.2f}\n"
-                        f"Categoria: {categoria}\n"
-                        f"Data: {dataAgora}\n"
-                        f"Forma de Pagamento: {formaDePagamento}"
+                        f"✅Compra parcelada registrada!\n"
+                        f"📝Categoria: {categoria}\n"
+                        f"💳{parcelas}x de R${valorParcela:.2f}\n"
+                        f"💰Forma de Pagamento: {formaDePagamento}"
+                        f"💸R${total:.2f}\n"
+                        f"📅Data: {dataAgora}\n"
                     )
                 
                 if "emprestimo" in text or "empréstimo" in text:
                     return (
-                        f"Empréstimo registrado!✅\n"
-                        f"{parcelas}x de R${valorParcela:.2f}\n"
-                        f"Total: R${total:.2f}\n"
-                        f"Categoria: {categoria}\n"
-                        f"Data: {dataAgora}\n"
-                        f"Forma de Pagamento: {formaDePagamento}"
+                        f"✅Compra com Empréstimo registrado!\n"
+                        f"📝Categoria: {categoria}\n"
+                        f"💳{parcelas}x de R${valorParcela:.2f}\n"
+                        f"💰Forma de Pagamento: {formaDePagamento}"
+                        f"💸R${total:.2f}\n"
+                        f"📅Data: {dataAgora}\n"
                     )
-            return "Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
+            return "❗Entendi que é parcelamento/emprestimo, mas não identifiquei parcelas e valor corretamente"
         
         numeros = re.findall(r"\d+[.,]?\d*", text)
 
@@ -190,17 +191,17 @@ def interpretar_mensagem(text):
             salvar_gastos(gastos)
 
             return (
-                f"Gasto registrado com sucesso! ✅\n"
-                f"Valor: R${valor:.2f}\n"
-                f"Categoria: {categoria}\n"
-                f"Data: {dataAgora}\n"
-                f"Forma de pagamento: {formaDePagamento}"
+                f"✅Gasto registrado com sucesso!\n"
+                f"📝Categoria: {categoria}\n"
+                f"💰Forma de pagamento: {formaDePagamento}"
+                f"💸R${valor:.2f}\n"
+                f"📅Data: {dataAgora}\n"
             )
-        return "Entendi! Você registrou um gasto, mas não identifiquei o valor."
+        return "❗Você registrou um gasto, mas não identifiquei o valor."
     
     if text.strip() == "listar gastos":
         if not gastos:
-            return "Nenhum gasto registrado ainda."
+            return "✅Nenhum gasto registrado ainda."
         
         resposta = "📋 Seus gastos: \n"
 
@@ -218,7 +219,7 @@ def interpretar_mensagem(text):
         numeros = re.findall(r"\d+", text)
 
         if not numeros:
-            return "Informe o número do gasto que deseja remover."
+            return "❗Informe o número do gasto que deseja remover."
         
         indice = int(numeros[0]) - 1
 
@@ -231,7 +232,7 @@ def interpretar_mensagem(text):
                 f"Valor: R${removido['valor']:.2f}\n"
                 f"Categoria: {removido['categoria']}"
             )
-        return "Número inválido."
+        return "❌Número inválido."
     
 
     if text.startswith("resumo"):
@@ -249,7 +250,7 @@ def interpretar_mensagem(text):
             nomeMesDigitado = partes[1]
 
             if nomeMesDigitado not in meses:
-                return "Mês inválido."
+                return "❌Mês inválido."
             
             mes = meses[nomeMesDigitado]
             ano = datetime.now().strftime("%Y")
@@ -263,7 +264,7 @@ def interpretar_mensagem(text):
         ]
 
         if not gastosFiltrados:
-            return "Nenhum gasto registrado nesse mês."
+            return "✅Nenhum gasto registrado nesse mês."
 
 
 
@@ -304,7 +305,7 @@ def interpretar_mensagem(text):
             resposta += f"Total {categoria}: R${totalCategoria:.2f}\n\n"
 
         if not detalhado:
-            resposta += "💳 Por Forma de Pagamento:\n"
+            resposta += "💰 Por Forma de Pagamento:\n"
 
             totalPagamento = {}
             for g in gastosFiltrados:
@@ -315,7 +316,7 @@ def interpretar_mensagem(text):
 
             resposta += "\n"
 
-        resposta += "💰 Total Geral: R${:.2f}\n\n".format(totalGeral)
+        resposta += "💵 Total Geral: R${:.2f}\n\n".format(totalGeral)
 
         return resposta
 
