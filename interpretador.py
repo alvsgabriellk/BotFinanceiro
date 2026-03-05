@@ -3,23 +3,23 @@ import os
 import json
 from datetime import datetime
 
-CAMINHO_ARQUIVO = "data/gastos.json"
+CAMINHO_ARQUIVO_GASTOS = "data/gastos.json"
 
 
 def carregar_gastos():
-    if not os.path.exists(CAMINHO_ARQUIVO):
+    if not os.path.exists(CAMINHO_ARQUIVO_GASTOS):
         return []
 
-    if os.path.getsize(CAMINHO_ARQUIVO) == 0:
+    if os.path.getsize(CAMINHO_ARQUIVO_GASTOS) == 0:
         return []
     
-    with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
+    with open(CAMINHO_ARQUIVO_GASTOS, "r", encoding="utf-8") as f:
         return json.load(f)
     
     
 
 def salvar_gastos(gastos):
-    with open(CAMINHO_ARQUIVO, "w", encoding="utf-8") as f:
+    with open(CAMINHO_ARQUIVO_GASTOS, "w", encoding="utf-8") as f:
         json.dump(gastos, f, indent=4, ensure_ascii=False)
 
 
