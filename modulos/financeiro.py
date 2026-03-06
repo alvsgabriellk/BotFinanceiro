@@ -25,4 +25,14 @@ def definirSalario(mes, valor):
 
         salvar_dados(dados)
 
+def adicionarRendaExtra(mes, valor):
+    dados = carregar_dados()
+
+    if mes not in dados:
+        return "Mês não encontrado."
+    
+    dados[mes]["rendas_extras"].append(valor)
+
+    salvar_dados(dados)
+    
     
