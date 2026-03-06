@@ -1,14 +1,20 @@
 import json
+import os
 
 CAMINHO_ARQUIVO_FINANCEIRO = "data/dados_financeiros.json"
 
 def carregar_dados():
+    if not os.path.exists(CAMINHO_ARQUIVO_FINANCEIRO):
+        return dict()
+    if os.path.getsize(CAMINHO_ARQUIVO_FINANCEIRO) == 0:
+        return dict()
+
     with open(CAMINHO_ARQUIVO_FINANCEIRO, "r") as f:
         return json.load(f)
     
 def salvar_dados(dados):
     with open(CAMINHO_ARQUIVO_FINANCEIRO, "w") as f:
-        return json.dump(CAMINHO_ARQUIVO_FINANCEIRO, f, indent=4)
+        json.dump(dados, f, indent=4)
     
 
 def definirSalario(mes, valor):
