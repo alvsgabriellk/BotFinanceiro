@@ -30,9 +30,16 @@ def adicionarRendaExtra(mes, valor):
 
     if mes not in dados:
         return "Mês não encontrado."
-    
     dados[mes]["rendas_extras"].append(valor)
 
     salvar_dados(dados)
+
+
+def definirLimite(mes, valor):
+    dados = carregar_dados()
     
-    
+    if mes not in dados:
+        return "Mês não encontrado."
+    dados[mes]["limite_mensal"] = valor
+
+    salvar_dados(dados)
