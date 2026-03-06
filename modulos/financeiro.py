@@ -11,3 +11,18 @@ def salvar_dados(dados):
         return json.dump(CAMINHO_ARQUIVO_FINANCEIRO, f, indent=4)
     
 
+def definirSalario(mes, valor):
+    dados = carregar_dados()
+
+    if mes not in dados:
+        dados[mes] = {
+            "salario_base": 0,
+            "rendas_extras": [],
+            "limite_mensal": 0
+        }
+
+        dados[mes]["salario_base"] = valor
+
+        salvar_dados(dados)
+
+    
